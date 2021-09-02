@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>CSR Generator</title>
+</head>
+<body>
+<h2>CSR Generator</h2>
+<div>
+    <form method="POST" action="/form">
+        <label>RSA key size:</label><br>
+        <input type="radio" name="rsa_key_size" id="2048" value="2048" checked>
+        <label for="2048">2048</label><br>
+        <input type="radio" name="rsa_key_size" id="4096" value="4096">
+        <label for="4096">4096</label><br>
+        <br>
+        <label for="country">Country:</label>
+        <input type="text" placeholder="Two-letter code (i.e. US)" id="country" name="country"
+               pattern="[A-Z]{2}" required><br>
+        <label for="state">State or province:</label>
+        <input type="text" placeholder="Full state name (i.e. Texas)" id="state" name="state" required><br>
+        <label for="city">City:</label>
+        <input type="text" placeholder="Full city name (i.e. Dallas)" id="city" name="city" required><br>
+        <br>
+        <label for="organization">Organization name:</label>
+        <input type="text" placeholder="Name of your company" id="organization" name="organization" required><br>
+        <label for="OU">Organizational Unit <i>(optional)</i>:</label>
+        <input type="text" placeholder="Unit name (i.e R&D)" id="OU" name="OU"><br>
+        <label for="email">Email <i>(optional)</i>:</label>
+        <input type="email" id="email" name="email"><br>
+        <br>
+        <label for="fqdn">Main FQDN (supports wildcard):</label>
+        <input type="text" placeholder="*.domain.tld" id="fqdn" name="fqdn" required><br>
+        <label for="san">Subject Alternative Names <i>(optional)</i>:</label>
+        <input type="text" placeholder="Comma separated" id="san" name="san"><br>
+
+        <br><br>
+
+        <input type="submit" value="Submit">
+    </form>
+</div>
+</body>
+</html>

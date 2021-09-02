@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>CSR Generator - Job {{ job_id }}</title>
+</head>
+<body>
+<h1>This job hasn't generated yet.</h1>
+<form method="POST" action="/job/{{ job_id }}/generate">
+    <input type="submit" value="Generate now">
+</form>
+</body>
+</html>

@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>CSR Generator - Job {{ job_id }}</title>
+    <style>
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(3, 20%);
+            grid-template-rows: auto 10px auto;
+            margin-left: 20%;
+        }
+    </style>
+</head>
+<body>
+<div class="grid-container">
+    <div style="grid-row: 1; grid-column: 1 / span 3">
+        <label for="confFile">Configuration file:</label>
+        <br>
+        <textarea id="confFile" name="confFile" autocomplete="off" rows="{{ conf_file_lines }}" form="updateForm"
+                  style="width: 100%"></textarea>
+    </div>
+    <div style="grid-row: 3; grid-column: 1; text-align: center">
+        <form id="updateForm" method="POST" action="/job/{{ job_id }}">
+            <input type="submit" value="Update file">
+        </form>
+    </div>
+    <div style="grid-row: 3; grid-column: 3; text-align: center">
+        <form id="generateForm" action="/job/{{ job_id }}/generate" method="POST">
+            <input type="submit" value="Generate certificates">
+        </form>
+    </div>
+</div>
+</body>
+<script>
+    const textArea = document.getElementById("confFile")
+
+    // Force update the config file's contents on page reload to make sure user always has latest version
+    window.onload = async () => {
+        textArea.value = "Loading..."
+        textArea.value = await (await fetch("/job/{{ job_id }}/config")).text()
+
+    }
+</script>
+</html>

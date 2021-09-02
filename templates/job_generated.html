@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>CSR Generator - Job {{ job_id }}</title>
+    <style>
+        * {
+            font-family: monospace;
+        }
+        .grid-container {
+            display: grid;
+            grid-template-columns: 20% 40%;
+            grid-template-rows: repeat(3, auto);
+            grid-row-gap: 25px;
+            margin-left: 20%;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+<div class="grid-container">
+    <div style="grid-column: 1 / span 2; grid-row: 1">
+        <h1>The job successfully generated without producing any errors</h1>
+    </div>
+    <div style="grid-column: 1; grid-row: 2">
+        <button id="toggleKeyBtn" onclick="toggleKey()">Show key</button>
+        <br>
+        <button onclick="download('{{ job_id }}.key', 'key')">Download key</button>
+    </div>
+    <div style="grid-column: 2; grid-row: 2; text-align: left">
+        <div style="white-space: pre-wrap" id="keyText"></div>
+        <button onclick="copyKey()" id="copyKeyBtn">Copy</button>
+    </div>
+
+    <div style="grid-column: 1; grid-row: 3;">
+        <button id="toggleCSRBtn" onclick="toggleCSR()">Show CSR</button>
+        <br>
+        <button onclick="download('{{ job_id }}.csr', 'csr')">Download CSR</button>
+    </div>
+    <div style="grid-column: 2; grid-row: 3; text-align: left">
+        <div style="white-space: pre-wrap" id="csrText"></div>
+        <button onclick="copyCSR()" id="copyCSRBtn">Copy</button>
+    </div>
+</div>
+</body>
+<script>
+    let key = null
+    let csr = null
+
+    const keyTextZone = document.getElementById("keyText")
+    const csrTextZone = document.getElementById("csrText")
+
+    const toggleKeyBtn = document.getElementById("toggleKeyBtn")
+    const toggleCSRBtn = document.getElementById("toggleCSRBtn")
+
+    const copyKeyBtn = document.getElementById("copyKeyBtn")
+    const copyCSRBtn = document.getElementById("copyCSRBtn")
+
+    // Hide the copy buttons on page load
+    let keyShown = false
+    let csrShown = false
+    copyKeyBtn.style.display = "none"
+    copyCSRBtn.style.display = "none"
+
+    async function getKey() {
+        if (key == null) {
+            key = await (await fetch("/job/{{ job_id }}/key")).text()
+        }
+        return key
+    }
+    async function getCSR() {
+        if (csr == null) {
+            csr = await (await fetch("/job/{{ job_id }}/csr")).text()
+        }
+        return csr
+    }
+
+    async function toggleKey() {
+        if (keyShown) {
+            // Key already shown, hide the key
+            keyTextZone.innerHTML = ""
+            toggleKeyBtn.innerText = "Show key"
+            copyKeyBtn.style.display = "none"
+        } else {
+            // Key hidden, show the key
+            keyTextZone.innerHTML = await getKey()
+            toggleKeyBtn.innerText = "Hide key"
+            copyKeyBtn.style.display = "block"
+        }
+        keyShown = !keyShown
+    }
+    async function toggleCSR() {
+        if (csrShown) {
+            // CSR already shown, hide the CSR
+            csrTextZone.innerHTML = ""
+            toggleCSRBtn.innerText = "Show CSR"
+            copyCSRBtn.style.display = "none"
+        } else {
+            // CSR hidden, show the CSR
+            csrTextZone.innerHTML = await getCSR()
+            toggleCSRBtn.innerText = "Hide CSR"
+            copyCSRBtn.style.display = "block"
+        }
+        csrShown = !csrShown
+    }
+
+    function copyKey() {
+        navigator.clipboard.writeText(key)
+    }
+    function copyCSR() {
+        navigator.clipboard.writeText(csr)
+    }
+
+    async function download(filename, type) {
+        let element = document.createElement("a")
+        if (type === "key") {
+            element.setAttribute("href", "data:text/plain;charset=utf-8," + encodeURIComponent(await getKey()))
+        } else {
+            element.setAttribute("href", "data:text/plain;charset=utf-8," + encodeURIComponent(await getCSR()))
+        }
+        element.setAttribute("download", filename)
+        element.style.display = "none"
+        element.click()
+    }
+
+</script>
+</html>

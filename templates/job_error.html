@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>CSR Generator - Job {{ job_id }}</title>
+    <style>
+        .log-output {
+            line-height: 4px;
+            font-family: monospace;
+        }
+    </style>
+</head>
+<body>
+<h2>An error occurred when trying to generate the files for this job.</h2>
+<br>
+<div class="log-output">
+    {% for line in split_error %}
+        <p>{{ line }}</p>
+    {% endfor %}
+</div>
+<br>
+<button onclick="location.href='/job/{{ job_id }}'">Edit this job</button>
+</body>
+</html>
