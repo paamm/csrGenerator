@@ -2,7 +2,7 @@ import os
 import sqlite3
 from enum import Enum
 from random import SystemRandom
-from typing import Optional
+from typing import Optional, List
 
 import app
 
@@ -135,6 +135,23 @@ def get_job(job_id: str) -> Job:
             return Job(job_id, f.read(), rsa_key_size, status, error_message)
     except FileNotFoundError:
         raise FileNotFoundError("Could not open the config file for this job.")
+
+
+def get_jobs() -> List[Job]:
+    """
+    Retrieves all the jobs currently in the database.
+
+    :return: A list containing Job objects
+    """
+
+    with sqlite3.connect(app.SQLITE_DB_PATH) as conn:
+        db = conn.cursor()
+        db.execute("SELECT id FROM jobs")
+        job_ids = db.fetchall()
+        result: List[Optional[Job]] = [None] * len(job_ids)
+        for i in range(len(job_ids)):
+            result[i] = get_job(job_ids[i][0])
+        return result
 
 
 def set_job_status(job_id: str, status: JobStatus):

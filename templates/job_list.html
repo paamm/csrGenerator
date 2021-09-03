@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>CSR Generator - Job list</title>
+    <style>
+        .grid-container {
+            display: grid;
+            grid-template-columns: 8em 12em 10em;
+            grid-template-rows: auto;
+            justify-items: center;
+        }
+    </style>
+</head>
+<body>
+<h1>List of jobs currently existing</h1>
+{% for job in job_list %}
+    <div class="grid-container" style="font-family: monospace; font-size: 1.2em">
+        <div style="grid-column: 1">
+            <p>{{ job[0] }}</p>
+        </div>
+        <div style="grid-column: 2">
+            <p>Status: {{ job[1] }}</p>
+        </div>
+        <div style="grid-column: 3">
+            <a href="{{ job[2] }}" style="margin-block-start: 1em; margin-block-end: 1em; display: inline-block">See job details</a>
+        </div>
+    </div>
+{% endfor %}
+</body>
+</html>

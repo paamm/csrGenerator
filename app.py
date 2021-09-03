@@ -12,7 +12,7 @@ from job_manager import JobStatus
 from queue_executor import QueueExecutor
 from routes import route_app
 
-# TODO List page, delete option in generate page
+# TODO Delete option in generate page
 
 # Static variables
 JOBS_FOLDER_PATH = os.getenv("CSR_JOBS", os.getcwd() + "/jobs/")

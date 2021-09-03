@@ -1,6 +1,7 @@
 import os
 import re
 import textwrap
+from typing import List, Tuple
 
 from flask import Blueprint, request, render_template, redirect
 
@@ -138,6 +139,27 @@ def job_update(job_id):
         f.write(request.form['confFile'])
 
     return redirect("/job/{}".format(job_id))
+
+
+@route_app.route("/jobs", methods=["GET"])
+def job_list():
+    """ This route lists all existing jobs with links to them """
+
+    jobs = job_manager.get_jobs()
+    # Format of tuples: (job_id, status, link to show)
+    formatted_jobs: List[Tuple[str, str, str]] = []
+
+    for job in jobs:
+        if job.get_status() in [JobStatus.QUEUED, JobStatus.ERROR, JobStatus.GENERATED]:
+            # Link to page showing key/csr or errors
+            link = "/job/{}/generate".format(job.get_id())
+        else:
+            # Either job hasn't generated yet or something weird happened when getting the status, link to edit page
+            link = "/job/{}".format(job.get_id())
+
+        formatted_jobs.append((job.get_id(), job.get_status().name.capitalize(), link))
+
+    return render_template("job_list.html", job_list=formatted_jobs)
 
 
 @route_app.route("/job/<job_id>/generate", methods=["GET"])
