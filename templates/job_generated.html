@@ -10,7 +10,7 @@
         .grid-container {
             display: grid;
             grid-template-columns: 20% 40%;
-            grid-template-rows: repeat(3, auto);
+            grid-template-rows: repeat(4, auto);
             grid-row-gap: 25px;
             margin-left: 20%;
             text-align: center;
@@ -41,6 +41,12 @@
         <div style="white-space: pre-wrap" id="csrText"></div>
         <button onclick="copyCSR()" id="copyCSRBtn">Copy</button>
     </div>
+    <div style="grid-column: 1; grid-row: 4">
+        <form action="/job/{{ job_id }}/delete" method="POST" onsubmit="return deleteAction()">
+            <input type="submit" value="Delete" id="deleteBtn">
+        </form>
+    </div>
+
 </div>
 </body>
 <script>
@@ -61,6 +67,9 @@
     let csrShown = false
     copyKeyBtn.style.display = "none"
     copyCSRBtn.style.display = "none"
+
+    let deleteConfirm = false
+    const deleteBtn = document.getElementById("deleteBtn")
 
     async function getKey() {
         if (key == null) {
@@ -121,6 +130,16 @@
         element.setAttribute("download", filename)
         element.style.display = "none"
         element.click()
+    }
+
+    function deleteAction() {
+        if (deleteBtn.value === "Delete") {
+            // Ask to confirm
+            deleteBtn.value = "Delete - Confirm"
+            return false
+        }
+        // Already confirmed
+        return true
     }
 
 </script>

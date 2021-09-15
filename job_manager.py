@@ -1,4 +1,5 @@
 import os
+import shutil
 import sqlite3
 from enum import Enum
 from random import SystemRandom
@@ -171,3 +172,24 @@ def set_job_error_message(job_id: str, error_message: Optional[str]):
         else:
             db.execute("UPDATE jobs SET error_message=? WHERE id=?", (error_message, job_id))
         conn.commit()
+
+
+def delete_job(job_id: str):
+    """
+    Deletes a certain job from the database and disk
+
+    :param job_id: The ID of the job to delete
+    :raises ValueError: Raised if no job can be found with the specified id
+    """
+
+    _ = _get_job(job_id)
+
+    # If no exception, job exists
+    with sqlite3.connect(app.SQLITE_DB_PATH) as conn:
+        db = conn.cursor()
+        db.execute("DELETE FROM jobs WHERE id=?", (job_id,))
+        conn.commit()
+
+    # Try to delete the folder containing the job's files
+    folder_path = os.path.join(app.JOBS_FOLDER_PATH, job_id)
+    shutil.rmtree(folder_path, ignore_errors=True)

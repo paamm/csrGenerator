@@ -203,6 +203,16 @@ def job_generate(job_id):
     return redirect(request.path)
 
 
+@route_app.route("/job/<job_id>/delete", methods=["POST"])
+def job_delete(job_id):
+    """ This route deletes the provided job from the database and disk """
+    try:
+        job_manager.delete_job(job_id)
+        return redirect("/jobs")
+    except ValueError as e:
+        return str(e), 404
+
+
 @route_app.route("/job/<job_id>/key", methods=["GET"])
 def job_get_key(job_id):
     """ This route returns the value of the SSL key for a generated job """

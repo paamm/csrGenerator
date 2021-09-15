@@ -12,8 +12,6 @@ from job_manager import JobStatus
 from queue_executor import QueueExecutor
 from routes import route_app
 
-# TODO Delete option in generate page
-
 # Static variables
 JOBS_FOLDER_PATH = os.getenv("CSR_JOBS", os.getcwd() + "/jobs/")
 SQLITE_DB_PATH = os.path.join(os.getenv("CSR_DB", os.getcwd()), "sqlite.db")
